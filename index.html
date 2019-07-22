@@ -1,54 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="utf-8">
-  <title>Quoth the Giphy</title>
-</head>
+    <head>
+        <meta charset="utf-8">
+        <title>GIF-Tastic!: Marvel Characters</title>
+    </head>
 
-<body>
-  <button data-person="Captain America">Captain America</button>
-  <button data-person="Hulk">Hulk</button>
-  <button data-person="Iron Man">Iron Man</button>
-  <button data-person="Thor">Thor</button>
-  <button data-person="Nick Fury">Nick Fury</button>
+    <body>
+        <button data-person="Captain America">Captain America</button>
+        <button data-person="Hulk">Hulk</button>
+        <button data-person="Iron Man">Iron Man</button>
+        <button data-person="Thor">Thor</button>
+        <button data-person="Nick Fury">Nick Fury</button>
 
-  <div id="gifs-appear-here">
-  </div>
+        <div id="gifs-appear-here"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  
-  <script type="text/javascript">
-    $("button").on("click", function() {
-      var person = $(this).attr("data-person");
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        
+        <script type="text/javascript">
+        //Possible array button function
+        //var listBrand =['LEXUS','AUDI','MAYBACK','FERRARI','TOYOTA'];
+        //
+        //function printBtn() {
+        //	for (var i = 0; i < listBrand.length; i++) {
+        //		var btn = document.createElement("button");
+        //		var t = document.createTextNode(listBrand[i]);
+        //		btn.appendChild(t);
+        //		document.body.appendChild(btn);
+        //	}
+        //}
+        //
+        //printBtn();
+        
+        $("button").on("click", function() {
+            var person = $(this).attr("data-person");
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + person + "&api_key=BkaUZZWcFij6J7AoQj3WtPb1R2p9O6V9&limit=10";
 
-      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-        person + "&api_key=BkaUZZWcFij6J7AoQj3WtPb1R2p9O6V9&limit=10";
-      $.ajax({
+        $.ajax({
         url: queryURL,
         method: "GET"
-      })
-        .then(function(response) {
-          var results = response.data;
+        })
+            .then(function(response) {
+                var results = response.data;
 
-          for (var i = 0; i < results.length; i++) {
-            if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
-              var gifDiv = $("<div>");
-              var rating = results[i].rating;
-              var p = $("<p>").text("Rating: " + rating);
-              var personImage = $("<img>");
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
+                        var gifDiv = $("<div>");
+                        var rating = results[i].rating;
+                        var p = $("<p>").text("Rating: " + rating);
+                        var personImage = $("<img>");
 
-              personImage.attr("src", results[i].images.fixed_height.url);
+                        personImage.attr("src", results[i].images.fixed_height.url);
 
-              gifDiv.append(p);
-              gifDiv.append(personImage);
+                        gifDiv.append(p);
+                        gifDiv.append(personImage);
 
-              $("#gifs-appear-here").prepend(gifDiv);
-            }
-          }
+                        $("#gifs-appear-here").prepend(gifDiv);
+                    }
+                }
+            });
         });
-    });
-  </script>
-</body>
+        </script>
+    </body>
 
 </html>
