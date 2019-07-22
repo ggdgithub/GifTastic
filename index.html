@@ -1,33 +1,54 @@
 <!DOCTYPE html>
-<html lang="eng">
-    <head>
-        <title>
-            GIF-Tastic!
-        </title>
-    </head>
-    <body>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script type="text/javascript">
-            // Start the javascript here
-            // var userinput = $(this).something;
-            // var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + userinput + "&api_key=LNedmOFRk7seFvUyaTMrf7bRydu4MLrg";
-        </script>
-        <!-- Pseudocode -->
-        <!--
-            What the app needs to do:
-                multiple buttons
-                    all one subject
-                    can add more (append)
-                    use a loop somehow
-                    says each thing on the button
-                    add new topics via form
-                when button is pressed,
-                    search GIPHY API
-                    append 10 gifs (non-animated)
-                        gifs animate upon click
-                        stop animation upon second click
-                        display ratings (G, PG, etc.)
-                    each button pressed will refresh with new 10 images
-        -->
-    </body>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Quoth the Giphy</title>
+</head>
+
+<body>
+  <button data-person="Captain America">Captain America</button>
+  <button data-person="Hulk">Hulk</button>
+  <button data-person="Iron Man">Iron Man</button>
+  <button data-person="Thor">Thor</button>
+  <button data-person="Nick Fury">Nick Fury</button>
+
+  <div id="gifs-appear-here">
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  
+  <script type="text/javascript">
+    $("button").on("click", function() {
+      var person = $(this).attr("data-person");
+
+      var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        person + "&api_key=BkaUZZWcFij6J7AoQj3WtPb1R2p9O6V9&limit=10";
+      $.ajax({
+        url: queryURL,
+        method: "GET"
+      })
+        .then(function(response) {
+          var results = response.data;
+
+          for (var i = 0; i < results.length; i++) {
+            if (results[i].rating !== "r" && results[i].rating !== "pg-13") {
+              var gifDiv = $("<div>");
+              var rating = results[i].rating;
+              var p = $("<p>").text("Rating: " + rating);
+              var personImage = $("<img>");
+
+              personImage.attr("src", results[i].images.fixed_height.url);
+
+              gifDiv.append(p);
+              gifDiv.append(personImage);
+
+              $("#gifs-appear-here").prepend(gifDiv);
+            }
+          }
+        });
+    });
+  </script>
+</body>
+
 </html>
